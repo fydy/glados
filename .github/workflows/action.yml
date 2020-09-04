@@ -1,0 +1,37 @@
+name: 'glados-checkin'
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 17 * * *'
+
+jobs:
+  get_points:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout codes'
+      uses: actions/checkout@v2
+    - name: 'Set python'
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: 'Install dependencies'
+      run: |
+        python -m pip install --upgrade beautifulsoup4
+        python -m pip install --upgrade requests
+        
+    - name: Checkin
+      run: |
+        python checkin.py 
+      env: 
+        SERVE: ${{ secrets.SERVE }}
+        SCKEY: ${{ secrets.SCKEY }}
+        COOKIE: ${{ secrets.COOKIE }}        
+
+
+    - name: SSH connection to Actions
+      if: ${{ failure() }}
+      uses: P3TERX/debugger-action@master
