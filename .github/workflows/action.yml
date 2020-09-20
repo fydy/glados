@@ -30,8 +30,3 @@ jobs:
         SERVE: ${{ secrets.SERVE }}
         SCKEY: ${{ secrets.SCKEY }}
         COOKIE: ${{ secrets.COOKIE }}        
-
-
-    - name: SSH connection to Actions
-      if: ${{ failure() }}
-      uses: P3TERX/debugger-action@master
